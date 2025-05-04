@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { Lot, Order } from "./type";
+import React from "react";
 import OrderRow from "./OrderRow";
+import { Lot, Order } from "../types";
+import * as Accordion from "@radix-ui/react-accordion";
 
 interface OrderTableProps {
   orders: Order[];
@@ -19,8 +20,6 @@ const OrderTable: React.FC<OrderTableProps> = ({
   onDeleteLot,
   onCreateLot,
 }) => {
-  const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
-
   if (orders.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center p-8 bg-white rounded-lg shadow">
@@ -83,7 +82,7 @@ const OrderTable: React.FC<OrderTableProps> = ({
             </th>
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
+        {/* <tbody className="bg-white divide-y divide-gray-200">
           {orders.map((order) => (
             <OrderRow
               key={order.id}
@@ -101,7 +100,22 @@ const OrderTable: React.FC<OrderTableProps> = ({
               onCreateLot={onCreateLot}
             />
           ))}
-        </tbody>
+        </tbody> */}
+        <Accordion.Root type="single" collapsible asChild>
+          <tbody>
+            {orders.map((order) => (
+              <OrderRow
+                key={order.id}
+                order={order}
+                onEditOrder={onEditOrder}
+                onDeleteOrder={onDeleteOrder}
+                onEditLot={onEditLot}
+                onDeleteLot={onDeleteLot}
+                onCreateLot={onCreateLot}
+              />
+            ))}
+          </tbody>
+        </Accordion.Root>
       </table>
     </div>
   );

@@ -29,11 +29,21 @@ export default {
       },
       animation: {
         "fade-in": "fadeIn 0.3s ease-in-out",
+        slideDown: "slideDown 300ms ease-out",
+        slideUp: "slideUp 300ms ease-out",
       },
       keyframes: {
         fadeIn: {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" },
+        },
+        slideDown: {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        slideUp: {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
         },
       },
     },

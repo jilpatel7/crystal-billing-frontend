@@ -9,11 +9,11 @@ import {
   CheckCircle,
   FileText
 } from 'lucide-react';
-import { Card, CardHeader, CardBody } from '../components/ui/Card';
-import { StatCard } from '../components/ui/StatCard';
-import { ActivityItem } from '../components/dashboard/ActivityItem';
-import { ProgressBar } from '../components/dashboard/ProgressBar';
-import { ChartPlaceholder } from '../components/dashboard/ChartPlaceholder';
+import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
+import { StatCard } from '../../../components/ui/StatCard';
+import { ChartPlaceholder } from '../components/ChartPlaceholder';
+import { ProgressBar } from '../components/ProgressBar';
+import { ActivityItem } from '../components/ActivityItem';
 
 const Dashboard: React.FC = () => {
   return (

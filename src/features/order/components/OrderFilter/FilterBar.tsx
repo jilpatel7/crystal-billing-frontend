@@ -3,9 +3,9 @@ import SearchBar from "./SearchBar";
 import StatusFilter from "./StatusFilter";
 import QuickFilter from "./QuickFilter";
 import { Plus } from "lucide-react";
-import { DateRange, OrderStatus } from "../type";
-import Button from "../../ui/Button";
+import Button from "../../../../components/ui/Button";
 import DateRangeFilter from "./DateRangeFilter";
+import { DateRange, OrderStatus } from "../../types";
 
 interface FilterBarProps {
   searchValue: string;
@@ -34,7 +34,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
         </div>
         <Button
           variant="primary"
-          className="self-start"
+          className="self-start flex items-center"
           onClick={onCreateOrder}
         >
           <Plus className="h-4 w-4 mr-1" />

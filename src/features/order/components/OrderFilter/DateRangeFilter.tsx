@@ -1,5 +1,5 @@
 import React from "react";
-import { DateRange } from "../type";
+import { DateRange } from "../../types";
 
 interface DateRangeFilterProps {
   dateRange: DateRange;

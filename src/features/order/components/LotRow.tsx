@@ -1,8 +1,8 @@
 import React from "react";
 import { Pencil, Trash2 } from "lucide-react";
-import StatusBadge from "../ui/StatusBadge";
-import IconButton from "../ui/IconButton";
-import { Lot } from "./type";
+import StatusBadge from "../../../components/ui/StatusBadge";
+import IconButton from "../../../components/ui/IconButton";
+import { Lot } from "../types";
 
 interface LotRowProps {
   lot: Lot;

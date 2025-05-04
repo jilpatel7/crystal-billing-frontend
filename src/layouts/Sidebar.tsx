@@ -9,7 +9,7 @@ import {
   HelpCircle,
   ListOrderedIcon,
 } from "lucide-react";
-import { NavItem } from "../ui/NavItem";
+import { NavItem } from "../components/ui/NavItem";
 
 interface SidebarProps {
   collapsed: boolean;

@@ -1,8 +1,8 @@
 import React from "react";
 import LotRow from "./LotRow";
 import { Plus } from "lucide-react";
-import { Lot } from "./type";
-import Button from "../ui/Button";
+import Button from "../../../components/ui/Button";
+import { Lot } from "../types";
 
 interface LotTableProps {
   lots: Lot[];
@@ -36,12 +36,13 @@ const LotTable: React.FC<LotTableProps> = ({
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div className="">
       <div className="flex justify-end mb-2">
         <Button
           variant="outline"
           size="sm"
           onClick={() => onCreateLot(orderId)}
+          className="flex items-center"
         >
           <Plus className="h-4 w-4 mr-1" />
           Add Lot

@@ -1,4 +1,4 @@
-import { Order, OrderStatus } from './components/Order/type/index';
+import { Order, OrderStatus } from "../features/order/types";
 
 const statuses: OrderStatus[] = ['PENDING', 'STARTED', 'COMPLETED', 'CANCELLED', 'ON_HOLD'];
 

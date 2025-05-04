@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { Order, OrderStatus, DateRange } from "../components/Order/type/index";
-import { MOCK_ORDERS } from "../mockData";
-import OrderTable from "../components/Order/OrderTable";
-import FilterBar from "../components/Order/OrderFilter/FilterBar";
-import Pagination from "../components/Order/Pagination";
+import { DateRange, Order, OrderStatus } from "../types";
+import FilterBar from "../components/OrderFilter/FilterBar";
+import OrderTable from "../components/OrderTable";
+import Pagination from "../components/Pagination";
+import { MOCK_ORDERS } from "../../../data/mockData";
 
 function OrderList() {
   const [orders] = useState<Order[]>(MOCK_ORDERS);

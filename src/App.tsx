@@ -1,6 +1,5 @@
-import { Layout } from "./components/layout/Layout";
-// import Dashboard from "./pages/Dashboard";
-import OrderList from "./pages/OrderList";
+import OrderList from "./features/order/pages/OrderList";
+import { Layout } from "./layouts/Layout";
 
 function App() {
   return (

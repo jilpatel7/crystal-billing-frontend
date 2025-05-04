@@ -1,5 +1,5 @@
 import React from "react";
-import { OrderStatus } from "../type";
+import { OrderStatus } from "../../types";
 
 interface StatusFilterProps {
   selectedStatus: OrderStatus | null;
