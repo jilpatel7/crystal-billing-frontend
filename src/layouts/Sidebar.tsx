@@ -49,22 +49,25 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
             <NavItem
               icon={<LayoutDashboard size={20} />}
               title="Dashboard"
-              isActive={true}
+              to="/"
               collapsed={collapsed}
             />
             <NavItem
               icon={<Users size={20} />}
               title="Users"
+              to="/users"
               collapsed={collapsed}
             />
             <NavItem
               icon={<ShoppingCart size={20} />}
               title="Products"
+              to="/products"
               collapsed={collapsed}
             />
             <NavItem
               icon={<BarChart2 size={20} />}
               title="Analytics"
+              to="/analytics"
               collapsed={collapsed}
             />
           </div>
@@ -81,11 +84,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
               <NavItem
                 icon={<ListOrderedIcon size={20} />}
                 title="View Orders"
+                to="/orders"
                 collapsed={collapsed}
               />
               <NavItem
                 icon={<ListOrderedIcon size={20} />}
                 title="Create Order"
+                to="/orders/create"
                 collapsed={collapsed}
               />
             </div>
@@ -103,11 +108,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
               <NavItem
                 icon={<Settings size={20} />}
                 title="Settings"
+                to="/settings"
                 collapsed={collapsed}
               />
               <NavItem
                 icon={<HelpCircle size={20} />}
                 title="Help"
+                to="/help"
                 collapsed={collapsed}
               />
             </div>
@@ -119,6 +126,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
         <NavItem
           icon={<LogOut size={20} />}
           title="Logout"
+          to="/logout"
           collapsed={collapsed}
         />
       </div>

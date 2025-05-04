@@ -1,25 +1,28 @@
 import React from "react";
+import { Link, useLocation } from "react-router-dom";
 
 interface NavItemProps {
   icon: React.ReactNode;
   title: string;
-  isActive?: boolean;
+  to: string;
   collapsed?: boolean;
 }
 
 export const NavItem: React.FC<NavItemProps> = ({
   icon,
   title,
-  isActive = false,
+  to,
   collapsed = false,
 }) => {
+  const location = useLocation();
+  const isActive = location.pathname === to;
+
   return (
-    <a
-      href="#"
+    <Link
+      to={to}
       className={`
-        group flex items-center ${
-          collapsed ? "justify-center" : ""
-        } px-2 py-2 text-sm font-medium rounded-md transition-colors duration-150 ease-in-out relative
+        group flex items-center ${collapsed ? "justify-center" : ""}
+        px-2 py-2 text-sm font-medium rounded-md transition-colors duration-150 ease-in-out relative
         ${
           isActive
             ? "text-blue-600 bg-blue-50 hover:bg-blue-100"
@@ -34,6 +37,6 @@ export const NavItem: React.FC<NavItemProps> = ({
           {title}
         </div>
       )}
-    </a>
+    </Link>
   );
 };
