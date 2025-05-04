@@ -1,8 +1,11 @@
-import React from "react";
+import { Loader2 } from "lucide-react";
+import React, { ReactNode } from "react";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "danger" | "success" | "outline";
   size?: "sm" | "md" | "lg";
+  icon?: ReactNode;
+  isLoading?: boolean;
   children: React.ReactNode;
 }
 
@@ -11,6 +14,10 @@ const Button: React.FC<ButtonProps> = ({
   size = "md",
   children,
   className = "",
+  icon,
+  disabled,
+  type = "button",
+  isLoading = false,
   ...props
 }) => {
   const getVariantClasses = (): string => {
@@ -46,11 +53,21 @@ const Button: React.FC<ButtonProps> = ({
   const baseClasses =
     "font-medium rounded-md shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500";
 
+  const disabledClasses =
+    disabled || isLoading ? "opacity-60 cursor-not-allowed" : "";
+
   return (
     <button
-      className={`${baseClasses} ${getVariantClasses()} ${getSizeClasses()} ${className}`}
+      type={type}
+      className={`${baseClasses} ${getVariantClasses()} ${disabledClasses} ${getSizeClasses()} ${className}`}
+      disabled={disabled || isLoading}
       {...props}
     >
+      {isLoading ? (
+        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+      ) : icon ? (
+        <span className="mr-2">{icon}</span>
+      ) : null}
       {children}
     </button>
   );

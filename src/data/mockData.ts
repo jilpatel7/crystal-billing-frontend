@@ -1,9 +1,8 @@
-import { Order, OrderStatus } from "../features/order/types";
+import { Order, OrderStatus, Party, Staff } from "../features/order/types";
 
-const statuses: OrderStatus[] = ['PENDING', 'STARTED', 'COMPLETED', 'CANCELLED', 'ON_HOLD'];
 
-function getRandomStatus(): OrderStatus {
-  return statuses[Math.floor(Math.random() * statuses.length)];
+function getRandomStatus(): string {
+  return OrderStatus.PENDING;
 }
 
 function generateRandomDate(start: Date, end: Date): string {
@@ -54,3 +53,30 @@ export const generateMockOrders = (count: number): Order[] => {
 };
 
 export const MOCK_ORDERS = generateMockOrders(20);
+
+
+// Mock party data for dropdown
+export const mockParties: Party[] = [
+  { id: '1', name: 'Diamond Traders Inc.' },
+  { id: '2', name: 'Gemstone Enterprises' },
+  { id: '3', name: 'Crystal Jewelers' },
+  { id: '4', name: 'Royal Diamond Exchange' },
+  { id: '5', name: 'Sparkle & Co.' },
+  { id: '6', name: 'Brilliant Cut Diamonds' },
+  { id: '7', name: 'Luxe Gem Partners' },
+  { id: '8', name: 'Premium Stone Works' },
+  { id: '9', name: 'Elite Diamond Guild' },
+  { id: '10', name: 'Heritage Jewel Traders' },
+];
+
+// Mock staff data for dropdown
+export const mockStaff: Staff[] = [
+  { id: '1', name: 'John Smith', role: 'Delivery Manager' },
+  { id: '2', name: 'Maria Garcia', role: 'Senior Courier' },
+  { id: '3', name: 'David Lee', role: 'Logistics Specialist' },
+  { id: '4', name: 'Sarah Johnson', role: 'Transport Coordinator' },
+  { id: '5', name: 'Robert Chen', role: 'Security Officer' },
+  { id: '6', name: 'Emma Williams', role: 'Delivery Associate' },
+  { id: '7', name: 'James Wilson', role: 'Courier' },
+  { id: '8', name: 'Sophia Martinez', role: 'Delivery Supervisor' },
+];
