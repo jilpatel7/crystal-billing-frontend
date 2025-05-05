@@ -63,3 +63,13 @@ export interface OrderFormValues {
   delivered_by?: string;               
   order_details: OrderDetail[];
 }
+
+export interface GetOrdersParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  sort?: string;
+  order?: 'ASC' | 'DESC';
+  dateFrom?: string;
+  dateTo?: string;
+}

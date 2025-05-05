@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
-import { DateRange, Order, OrderStatus } from "../types";
+import { DateRange, GetOrdersParams, Order, OrderStatus } from "../types";
 import FilterBar from "../components/OrderFilter/FilterBar";
 import OrderTable from "../components/OrderTable";
 import Pagination from "../components/Pagination";
 import { MOCK_ORDERS } from "../../../data/mockData";
+import { useQuery } from "@tanstack/react-query";
+import { getOrders } from "../services";
 
 function OrderList() {
   const [orders] = useState<Order[]>(MOCK_ORDERS);
@@ -22,6 +24,19 @@ function OrderList() {
   const [selectedStatus, setSelectedStatus] = useState<OrderStatus | null>(
     null
   );
+
+  const queryParams: GetOrdersParams = {
+    page: currentPage,
+    limit: ordersPerPage,
+    search: searchTerm,
+    dateFrom: String(dateRange.from ?? ""),
+    dateTo: String(dateRange.to ?? ""),
+  };
+
+  const { data, isLoading, isError, error } = useQuery<Order[]>({
+    queryKey: ["orders", queryParams],
+    queryFn: () => getOrders(queryParams),
+  });
 
   // // Modal states
   // const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
@@ -84,6 +99,18 @@ function OrderList() {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
+  if (isError) {
+    <div>Error: {error.message}</div>;
+  }
+
+  if (isLoading) {
+    <div>Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
