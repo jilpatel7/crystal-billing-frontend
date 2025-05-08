@@ -4,6 +4,7 @@ import { Layout } from "./layouts/Layout";
 import Dashboard from "./features/dashboard/pages/Dashboard";
 import OrderFormPage from "./features/order/pages/OrderFormPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "sonner";
 
 function App() {
   const queryClient = new QueryClient();
@@ -16,6 +17,7 @@ function App() {
           <Route path="/orders/create" element={<OrderFormPage />} />
         </Routes>
       </Layout>
+      <Toaster richColors position="top-right" />
     </QueryClientProvider>
   );
 }

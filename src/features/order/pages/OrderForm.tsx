@@ -16,6 +16,7 @@ import TextInput from "../../../components/ui/TextInput";
 import DateTimeInput from "../../../components/ui/DateTimeInput";
 import { useMutation } from "@tanstack/react-query";
 import { createOrder } from "../services";
+import { toast } from "sonner";
 
 interface OrderFormProps {
   parties: { id: number; name: string }[];
@@ -58,10 +59,10 @@ const OrderForm: React.FC<OrderFormProps> = ({ parties, staff }) => {
     const response = await mutateAsync(data);
     console.log(response);
     if (response.response_type === "success") {
-      alert("Order created successfully");
+      toast.success("Order created successfully");
       reset();
     } else {
-      alert("Error creating order");
+      toast.error("Failed to create order");
     }
   };
 
