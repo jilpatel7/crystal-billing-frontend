@@ -4,7 +4,7 @@ import { ChevronDown, Check, Search, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface SelectOption {
-  value: string;
+  value: number | string;
   label: string;
 }
 

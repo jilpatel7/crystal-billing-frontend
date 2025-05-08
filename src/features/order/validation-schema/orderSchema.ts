@@ -1,37 +1,40 @@
 import { z } from 'zod';
-import { OrderStatus } from '../types';
+import { Status } from '../types'; // enum Status { PENDING = 'PENDING', SUCCESS = 'SUCCESS', ... }
 
-// Order details schema (for each lot)
+// Lot schema
 const orderDetailSchema = z.object({
   no_of_diamonds: z.number({
     required_error: 'Number of diamonds is required',
     invalid_type_error: 'Number of diamonds must be a number',
-  }).int().positive('Number of diamonds must be positive'),
+  }).int('Number of diamonds must be an integer').positive('Number of diamonds must be greater than 0'),
 
   price_per_caret: z.number({
     required_error: 'Price per carat is required',
     invalid_type_error: 'Price per carat must be a number',
-  }).nonnegative('Price per carat cannot be negative'),
+  }).positive('Price per carat must be greater than 0'),
 
   total_caret: z.number({
     required_error: 'Total carats is required',
     invalid_type_error: 'Total carats must be a number',
-  }).positive('Total carats must be positive'),
+  }).positive('Total carats must be greater than 0'),
 
-  status: z.string({
-    required_error: 'Status is required',
-  }).default(OrderStatus.PENDING),
+  status: z.nativeEnum(Status, {
+    required_error: 'Lot status is required',
+    invalid_type_error: 'Invalid lot status',
+  }),
 });
 
-// Main order form schema
+// Order schema
 export const orderFormSchema = z.object({
-  party_id: z.string({
+  party_id: z.number({
     required_error: 'Party is required',
+    invalid_type_error: 'Party ID must be a number',
   }).min(1, 'Party is required'),
 
-  no_of_lots: z
-  .number({ invalid_type_error: "Number of lots is required" })
-  .min(1, "Must be at least 1"),
+  status: z.nativeEnum(Status, {
+    required_error: 'Order status is required',
+    invalid_type_error: 'Invalid order status',
+  }),
 
   jagad_no: z.string({
     required_error: 'Jagad number is required',
@@ -40,24 +43,47 @@ export const orderFormSchema = z.object({
   received_at: z.date({
     required_error: 'Received date is required',
     invalid_type_error: 'Received date must be a valid date',
-  }),
-
+  }).refine(
+    (date) => date <= new Date(),
+    { message: 'Received date cannot be in the future' }
+  ),
+  
   delivered_at: z.date({
     invalid_type_error: 'Delivered date must be a valid date',
   }).nullable().optional(),
 
-  delivered_by: z.string().optional(),
+  delivered_by: z.number({
+    invalid_type_error: 'Delivered by must be a number',
+  }).nullable().optional(),
 
   order_details: z.array(orderDetailSchema).min(1, 'At least one lot is required'),
 })
+// delivered_at and delivered_by must either both be set or both be null
 .refine(
-  (data) => {
-    if (data.delivered_at && !data.delivered_by) return false;
-    return true;
-  },
+  (data) =>
+    (data.delivered_at && data.delivered_by !== null && data.delivered_by !== undefined) ||
+    (!data.delivered_at && (data.delivered_by === null || data.delivered_by === undefined)),
   {
-    message: 'Delivered by is required when delivery date is provided',
+    message: 'Both Delivered At and Delivered By must be filled or both must be empty',
     path: ['delivered_by'],
+  }
+)
+// delivered_at must not be before received_at
+.refine(
+  (data) =>
+    !data.delivered_at || data.delivered_at >= data.received_at,
+  {
+    message: 'Delivered date cannot be before Received date',
+    path: ['delivered_at'],
+  }
+)
+// if order status is SUCCESS, all lot statuses must also be SUCCESS
+.refine(
+  (data) =>
+    data.status !== Status.COMPLETED || data.order_details.every(detail => detail.status === Status.COMPLETED),
+  {
+    message: 'All lot statuses must be SUCCESS when order status is SUCCESS',
+    path: ['order_details'],
   }
 );
 

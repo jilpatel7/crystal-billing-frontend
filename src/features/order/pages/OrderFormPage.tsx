@@ -1,8 +1,30 @@
 import React from "react";
 import OrderForm from "./OrderForm";
-import { mockParties, mockStaff } from "../../../data/mockData";
+import { useQuery } from "@tanstack/react-query";
+import { getAllPartyIdsAndNames } from "../../party/services";
+import { getAllStaffIdsAndNames } from "../../staff/services";
 
 const OrderFormPage: React.FC = () => {
+  const {
+    data: allPartyIdsAndNames,
+    // isLoading,
+    // isError,
+    // error,
+  } = useQuery({
+    queryKey: ["partyIdsAndNames"],
+    queryFn: () => getAllPartyIdsAndNames(),
+  });
+
+  const {
+    data: allStaffIdsAndNames,
+    // isLoading,
+    // isError,
+    // error,
+  } = useQuery({
+    queryKey: ["staffIdsAndNames"],
+    queryFn: () => getAllStaffIdsAndNames(),
+  });
+
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
       <div className="max-w-4xl mx-auto">
@@ -17,7 +39,23 @@ const OrderFormPage: React.FC = () => {
           </p>
         </header>
 
-        <OrderForm parties={mockParties} staff={mockStaff} />
+        <OrderForm
+          parties={allPartyIdsAndNames?.data ?? []}
+          staff={
+            allStaffIdsAndNames?.data?.map(
+              (staff: {
+                id: number;
+                first_name: string;
+                last_name: string;
+              }) => {
+                return {
+                  id: staff.id,
+                  name: staff.first_name + " " + staff.last_name,
+                };
+              }
+            ) ?? []
+          }
+        />
       </div>
     </div>
   );

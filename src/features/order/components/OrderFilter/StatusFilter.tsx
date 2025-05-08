@@ -10,13 +10,7 @@ const StatusFilter: React.FC<StatusFilterProps> = ({
   selectedStatus,
   onChange,
 }) => {
-  const statuses: OrderStatus[] = [
-    "PENDING",
-    "STARTED",
-    "COMPLETED",
-    "CANCELLED",
-    "ON_HOLD",
-  ];
+  const statuses = ["PENDING", "STARTED", "COMPLETED", "CANCELLED", "ON_HOLD"];
 
   return (
     <div className="flex flex-col sm:flex-row gap-2 items-start sm:items-center">

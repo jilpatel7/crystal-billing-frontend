@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { DateRange, GetOrdersParams, Order, OrderStatus } from "../types";
+import { DateRange, GetOrdersParams, Order, Status } from "../types";
 import FilterBar from "../components/OrderFilter/FilterBar";
 import OrderTable from "../components/OrderTable";
 import Pagination from "../components/Pagination";
@@ -21,9 +21,7 @@ function OrderList() {
     from: null,
     to: null,
   });
-  const [selectedStatus, setSelectedStatus] = useState<OrderStatus | null>(
-    null
-  );
+  const [selectedStatus, setSelectedStatus] = useState<Status | null>(null);
 
   const queryParams: GetOrdersParams = {
     page: currentPage,
@@ -33,7 +31,7 @@ function OrderList() {
     dateTo: String(dateRange.to ?? ""),
   };
 
-  const { data, isLoading, isError, error } = useQuery<Order[]>({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["orders", queryParams],
     queryFn: () => getOrders(queryParams),
   });

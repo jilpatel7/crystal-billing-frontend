@@ -4,39 +4,47 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
 import OrderDetailsList from "./OrderDetailsList";
 import { motion } from "framer-motion";
-import { orderFormSchema } from "../validation-schema/orderSchema";
-import { OrderFormValues, OrderStatus, Party, Staff } from "../types";
+import {
+  OrderFormSchema,
+  orderFormSchema,
+} from "../validation-schema/orderSchema";
+import { Status } from "../types";
 import Button from "../../../components/ui/Button";
 import FormSection from "../../../components/ui/FormSelection";
 import SelectInput from "../../../components/ui/SelectInput";
-import NumberInput from "../../../components/ui/NumberInput";
 import TextInput from "../../../components/ui/TextInput";
 import DateTimeInput from "../../../components/ui/DateTimeInput";
+import { useMutation } from "@tanstack/react-query";
+import { createOrder } from "../services";
 
 interface OrderFormProps {
-  parties: Party[];
-  staff: Staff[];
+  parties: { id: number; name: string }[];
+  staff: { id: number; name: string }[];
 }
 
 const OrderForm: React.FC<OrderFormProps> = ({ parties, staff }) => {
-  const methods = useForm({
+  const methods = useForm<OrderFormSchema>({
     resolver: zodResolver(orderFormSchema),
     defaultValues: {
-      party_id: "",
-      no_of_lots: undefined,
+      party_id: undefined,
       jagad_no: "",
+      status: Status.PENDING,
       received_at: new Date(),
       delivered_at: null,
-      delivered_by: "",
+      delivered_by: null,
       order_details: [
         {
-          no_of_diamonds: undefined,
-          price_per_caret: undefined,
-          total_caret: undefined,
-          status: OrderStatus.PENDING,
+          no_of_diamonds: 0,
+          price_per_caret: 0,
+          total_caret: 0,
+          status: Status.PENDING,
         },
       ],
     },
+  });
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: createOrder,
   });
 
   const {
@@ -45,15 +53,16 @@ const OrderForm: React.FC<OrderFormProps> = ({ parties, staff }) => {
     reset,
   } = methods;
 
-  const onSubmit = async (data: OrderFormValues) => {
-    // Simulate API call
+  const onSubmit = async (data: OrderFormSchema) => {
     console.log("Submitting form data:", data);
-
-    // In real world, this would be an API call:
-    // await createOrder(data);
-
-    alert("Order created successfully!");
-    reset();
+    const response = await mutateAsync(data);
+    console.log(response);
+    if (response.response_type === "success") {
+      alert("Order created successfully");
+      reset();
+    } else {
+      alert("Error creating order");
+    }
   };
 
   return (
@@ -82,17 +91,24 @@ const OrderForm: React.FC<OrderFormProps> = ({ parties, staff }) => {
                 required
               />
 
-              <NumberInput
-                name="no_of_lots"
-                label="Number of Lots"
-                min={1}
-                required
-              />
-
               <TextInput
                 name="jagad_no"
                 label="Jagad Number"
                 placeholder="Enter jagad number"
+                required
+              />
+
+              <SelectInput
+                name="status"
+                label="Order Status"
+                placeholder="Select status"
+                options={Object.entries(Status).map(([key, value]) => ({
+                  value,
+                  label: key
+                    .split("_")
+                    .map((word) => word.charAt(0) + word.slice(1).toLowerCase())
+                    .join(" "),
+                }))}
                 required
               />
 
@@ -127,7 +143,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ parties, staff }) => {
             type="button"
             variant="outline"
             onClick={() => reset()}
-            disabled={isSubmitting}
+            disabled={isSubmitting || isPending}
           >
             Cancel
           </Button>
@@ -135,7 +151,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ parties, staff }) => {
           <Button
             type="submit"
             variant="primary"
-            disabled={isSubmitting}
+            disabled={isSubmitting || isPending}
             icon={<Save size={18} />}
             className="flex items-center"
           >
