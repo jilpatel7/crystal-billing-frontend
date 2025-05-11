@@ -9,10 +9,10 @@ import { Lot, Order } from "../types";
 interface OrderRowProps {
   order: Order;
   onEditOrder: (order: Order) => void;
-  onDeleteOrder: (orderId: string) => void;
+  onDeleteOrder: (orderId: number) => void;
   onEditLot: (lot: Lot) => void;
-  onDeleteLot: (lotId: string) => void;
-  onCreateLot: (orderId: string) => void;
+  onDeleteLot: (lotId: number) => void;
+  onCreateLot: (orderId: number) => void;
 }
 
 const OrderRow: React.FC<OrderRowProps> = ({
@@ -23,18 +23,15 @@ const OrderRow: React.FC<OrderRowProps> = ({
   onDeleteLot,
   onCreateLot,
 }) => {
-  const formatCurrency = (amount: number) =>
-    new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(amount);
-
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat("en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
     }).format(date);
   };
 
@@ -53,25 +50,25 @@ const OrderRow: React.FC<OrderRowProps> = ({
                   <ChevronDown className="h-5 w-5" />
                 </Accordion.Trigger>
                 <span className="text-sm font-medium text-gray-900">
-                  {order.orderNumber}
+                  {"Order #" + order.id}
                 </span>
               </div>
             </Accordion.Header>
           </td>
           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-            {order.customerName}
+            {order.party.name}
           </td>
           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-            {formatDate(order.date)}
+            {order.order_details.length}
+          </td>
+          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            {order.jagad_no}
           </td>
           <td className="px-6 py-4 whitespace-nowrap">
             <StatusBadge status={order.status} />
           </td>
           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-            {order.lots.length}
-          </td>
-          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-            {formatCurrency(order.total)}
+            {formatDate(order.received_at)}
           </td>
           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
             <div className="flex justify-end space-x-2">
@@ -103,7 +100,7 @@ const OrderRow: React.FC<OrderRowProps> = ({
                   Lots
                 </div>
                 <LotTable
-                  lots={order.lots}
+                  lots={order.order_details}
                   onEditLot={onEditLot}
                   onDeleteLot={onDeleteLot}
                   onCreateLot={onCreateLot}

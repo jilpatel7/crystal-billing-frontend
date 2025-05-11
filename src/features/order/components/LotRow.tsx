@@ -7,36 +7,34 @@ import { Lot } from "../types";
 interface LotRowProps {
   lot: Lot;
   onEdit: (lot: Lot) => void;
-  onDelete: (lotId: string) => void;
+  onDelete: (lotId: number) => void;
+  index: number;
 }
 
-const LotRow: React.FC<LotRowProps> = ({ lot, onEdit, onDelete }) => {
+const LotRow: React.FC<LotRowProps> = ({ lot, onEdit, onDelete, index }) => {
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat("en-IN", {
       style: "currency",
-      currency: "USD",
+      currency: "INR",
     }).format(amount);
   };
 
   return (
     <tr className="hover:bg-gray-50 transition-colors">
       <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500">
-        {lot.lotNumber}
+        {index + 1}
       </td>
       <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500">
-        {lot.description}
+        {lot.no_of_diamonds}
       </td>
       <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500">
-        {lot.quantity}
+        {lot.total_caret}
+      </td>
+      <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500">
+        {formatCurrency(lot.price_per_caret)}
       </td>
       <td className="px-6 py-3 whitespace-nowrap text-sm">
         <StatusBadge status={lot.status} />
-      </td>
-      <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500">
-        {formatCurrency(lot.price)}
-      </td>
-      <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500">
-        {formatCurrency(lot.price * lot.quantity)}
       </td>
       <td className="px-6 py-3 whitespace-nowrap text-right text-sm font-medium">
         <div className="flex justify-end space-x-2">

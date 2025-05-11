@@ -7,7 +7,7 @@ interface StatusBadgeProps {
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   const getStatusColor = (status: string): string => {
-    switch (status) {
+    switch (status?.toUpperCase()) {
       case Status.PENDING:
         return "bg-yellow-100 text-yellow-800";
       case Status.STARTED:
@@ -29,7 +29,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
         status
       )}`}
     >
-      {status.replace("_", " ")}
+      {status.replace("_", " ").toUpperCase()}
     </span>
   );
 };

@@ -1,28 +1,56 @@
-export interface Order {
-  id: string;
-  orderNumber: string;
-  customerName: string;
-  date: string;
+export interface Lot {
+  id: number;
+  order_id: number;
+  no_of_diamonds: number;
+  total_caret: number;
   status: string;
-  total: number;
-  lots: Lot[];
+  price_per_caret: number;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
 }
 
-export interface Lot {
-  id: string;
-  lotNumber: string;
-  description: string;
-  quantity: number;
-  status: string;
-  price: number;
+export interface Party {
+  id: number;
+  gstin_no: string;
+  company_id: number;
+  name: string;
+  email: string | null;
+  personal_phone: string | null;
+  office_phone: string | null;
+  logo: string | null;
+  price_per_caret: number;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
 }
+
+export interface Order {
+  id: number;
+  party_id: number;
+  company_id: number;
+  no_of_lots: number;
+  jagad_no: string;
+  received_at: string;
+  delivered_at: string | null;
+  delivered_by: string | null;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+  order_details: Lot[];
+  party: Party;
+}
+
+export interface OrderResponse {
+  data: Order[];
+}
+
 
 export interface DateRange {
   from: Date | null;
   to: Date | null;
 }
-
-// original types
 
 export enum Status {
   PENDING = 'PENDING',
@@ -39,4 +67,5 @@ export interface GetOrdersParams {
   order?: 'ASC' | 'DESC';
   dateFrom?: string;
   dateTo?: string;
+  status?: Status | null;
 }

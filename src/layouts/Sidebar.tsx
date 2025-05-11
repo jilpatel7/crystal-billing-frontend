@@ -8,6 +8,7 @@ import {
   LogOut,
   HelpCircle,
   ListOrderedIcon,
+  BadgePlus,
 } from "lucide-react";
 import { NavItem } from "../components/ui/NavItem";
 
@@ -88,9 +89,33 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
                 collapsed={collapsed}
               />
               <NavItem
-                icon={<ListOrderedIcon size={20} />}
+                icon={<BadgePlus size={20} />}
                 title="Create Order"
                 to="/orders/create"
+                collapsed={collapsed}
+              />
+            </div>
+          </div>
+
+          <div className="mt-10">
+            <h6
+              className={`px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider ${
+                collapsed ? "sr-only" : ""
+              }`}
+            >
+              Party
+            </h6>
+            <div className="mt-2 px-2 space-y-1">
+              <NavItem
+                icon={<ListOrderedIcon size={20} />}
+                title="View Party"
+                to="/party"
+                collapsed={collapsed}
+              />
+              <NavItem
+                icon={<BadgePlus size={20} />}
+                title="Create Party"
+                to="/party/create"
                 collapsed={collapsed}
               />
             </div>

@@ -30,7 +30,7 @@ const OrderFormPage: React.FC = () => {
       <div className="max-w-4xl mx-auto">
         <header className="mb-8">
           <div className="flex items-center justify-between mb-2">
-            <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 text-transparent bg-clip-text">
+            <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-transparent bg-clip-text">
               Create New Order
             </h1>
           </div>

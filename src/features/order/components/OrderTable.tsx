@@ -6,10 +6,11 @@ import * as Accordion from "@radix-ui/react-accordion";
 interface OrderTableProps {
   orders: Order[];
   onEditOrder: (order: Order) => void;
-  onDeleteOrder: (orderId: string) => void;
+  onDeleteOrder: (orderId: number) => void;
   onEditLot: (lot: Lot) => void;
-  onDeleteLot: (lotId: string) => void;
-  onCreateLot: (orderId: string) => void;
+  onDeleteLot: (lotId: number) => void;
+  onCreateLot: (orderId: number) => void;
+  isLoading: boolean;
 }
 
 const OrderTable: React.FC<OrderTableProps> = ({
@@ -19,7 +20,19 @@ const OrderTable: React.FC<OrderTableProps> = ({
   onEditLot,
   onDeleteLot,
   onCreateLot,
+  isLoading,
 }) => {
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center p-8 bg-white rounded-lg shadow">
+        <div className="text-xl font-medium text-gray-500 mb-2">Loading...</div>
+        <p className="text-gray-400 mb-4">
+          Please wait while we fetch your orders
+        </p>
+      </div>
+    );
+  }
+
   if (orders.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center p-8 bg-white rounded-lg shadow">
@@ -48,19 +61,7 @@ const OrderTable: React.FC<OrderTableProps> = ({
               scope="col"
               className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
-              Customer
-            </th>
-            <th
-              scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
-              Date
-            </th>
-            <th
-              scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
-              Status
+              Party
             </th>
             <th
               scope="col"
@@ -72,7 +73,19 @@ const OrderTable: React.FC<OrderTableProps> = ({
               scope="col"
               className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
-              Total
+              Jagad No.
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Status
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Received At
             </th>
             <th
               scope="col"
@@ -82,25 +95,6 @@ const OrderTable: React.FC<OrderTableProps> = ({
             </th>
           </tr>
         </thead>
-        {/* <tbody className="bg-white divide-y divide-gray-200">
-          {orders.map((order) => (
-            <OrderRow
-              key={order.id}
-              order={order}
-              isExpanded={expandedOrderId === order.id}
-              onToggleExpand={() =>
-                setExpandedOrderId((prev) =>
-                  prev === order.id ? null : order.id
-                )
-              }
-              onEditOrder={onEditOrder}
-              onDeleteOrder={onDeleteOrder}
-              onEditLot={onEditLot}
-              onDeleteLot={onDeleteLot}
-              onCreateLot={onCreateLot}
-            />
-          ))}
-        </tbody> */}
         <Accordion.Root type="single" collapsible asChild>
           <tbody>
             {orders.map((order) => (

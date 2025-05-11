@@ -7,9 +7,9 @@ import { Lot } from "../types";
 interface LotTableProps {
   lots: Lot[];
   onEditLot: (lot: Lot) => void;
-  onDeleteLot: (lotId: string) => void;
-  onCreateLot: (orderId: string) => void;
-  orderId: string;
+  onDeleteLot: (lotId: number) => void;
+  onCreateLot: (orderId: number) => void;
+  orderId: number;
 }
 
 const LotTable: React.FC<LotTableProps> = ({
@@ -61,31 +61,25 @@ const LotTable: React.FC<LotTableProps> = ({
               scope="col"
               className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
-              Description
+              No. of Diamonds
             </th>
             <th
               scope="col"
               className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
-              Quantity
+              Total Caret
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Price per Caret
             </th>
             <th
               scope="col"
               className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
               Status
-            </th>
-            <th
-              scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
-              Unit Price
-            </th>
-            <th
-              scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
-              Total
             </th>
             <th
               scope="col"
@@ -96,12 +90,13 @@ const LotTable: React.FC<LotTableProps> = ({
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {lots.map((lot) => (
+          {lots.map((lot, index) => (
             <LotRow
               key={lot.id}
               lot={lot}
               onEdit={onEditLot}
               onDelete={onDeleteLot}
+              index={index}
             />
           ))}
         </tbody>
