@@ -137,7 +137,7 @@ import { useEffect, useState } from "react";
 import { DateRange, GetOrdersParams, Status } from "../types";
 import FilterBar from "../components/OrderFilter/FilterBar";
 import OrderTable from "../components/OrderTable";
-import Pagination from "../components/Pagination";
+import Pagination from "../../../components/ui/Pagination";
 import { useQuery } from "@tanstack/react-query";
 import { getOrders } from "../services";
 import { useNavigate } from "react-router-dom";

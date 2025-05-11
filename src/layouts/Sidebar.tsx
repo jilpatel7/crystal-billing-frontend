@@ -44,7 +44,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
         )}
       </div>
 
-      <div className="flex-1">
+      <div className="flex-1 overflow-auto">
         <nav className="py-4">
           <div className="px-2 space-y-1">
             <NavItem
@@ -108,7 +108,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
             <div className="mt-2 px-2 space-y-1">
               <NavItem
                 icon={<ListOrderedIcon size={20} />}
-                title="View Party"
+                title="View Parties"
                 to="/party"
                 collapsed={collapsed}
               />
@@ -116,6 +116,30 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
                 icon={<BadgePlus size={20} />}
                 title="Create Party"
                 to="/party/create"
+                collapsed={collapsed}
+              />
+            </div>
+          </div>
+
+          <div className="mt-10">
+            <h6
+              className={`px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider ${
+                collapsed ? "sr-only" : ""
+              }`}
+            >
+              Staff
+            </h6>
+            <div className="mt-2 px-2 space-y-1">
+              <NavItem
+                icon={<ListOrderedIcon size={20} />}
+                title="View Staff"
+                to="/staff"
+                collapsed={collapsed}
+              />
+              <NavItem
+                icon={<BadgePlus size={20} />}
+                title="Create Staff Member"
+                to="/staff/create"
                 collapsed={collapsed}
               />
             </div>

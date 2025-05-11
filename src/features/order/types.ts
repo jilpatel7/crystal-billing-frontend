@@ -1,24 +1,11 @@
+import { Party } from "../party/types";
+
 export interface Lot {
   id: number;
   order_id: number;
   no_of_diamonds: number;
   total_caret: number;
   status: string;
-  price_per_caret: number;
-  created_at: string;
-  updated_at: string;
-  deleted_at: string | null;
-}
-
-export interface Party {
-  id: number;
-  gstin_no: string;
-  company_id: number;
-  name: string;
-  email: string | null;
-  personal_phone: string | null;
-  office_phone: string | null;
-  logo: string | null;
   price_per_caret: number;
   created_at: string;
   updated_at: string;

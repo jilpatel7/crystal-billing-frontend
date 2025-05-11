@@ -10,7 +10,7 @@ interface SearchBarProps {
 const SearchBar: React.FC<SearchBarProps> = ({
   value,
   onChange,
-  placeholder = "Search orders...",
+  placeholder = "Search here...",
 }) => {
   return (
     <div className="relative">
