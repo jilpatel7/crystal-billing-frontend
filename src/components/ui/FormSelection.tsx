@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { ClipboardList, Diamond } from "lucide-react";
+import { ClipboardList, Diamond, MapPin, UserPlus } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface FormSectionProps {
@@ -21,6 +21,10 @@ const FormSection: React.FC<FormSectionProps> = ({
         return <ClipboardList size={24} className="text-indigo-600" />;
       case "gem":
         return <Diamond size={24} className="text-indigo-600" />;
+      case "user":
+        return <UserPlus size={24} className="text-indigo-600" />;
+      case "map":
+        return <MapPin size={24} className="text-indigo-600" />;
       default:
         return null;
     }

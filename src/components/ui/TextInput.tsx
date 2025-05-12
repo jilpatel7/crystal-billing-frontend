@@ -8,6 +8,7 @@ interface TextInputProps {
   required?: boolean;
   disabled?: boolean;
   className?: string;
+  type?: string;
 }
 
 const TextInput: React.FC<TextInputProps> = ({
@@ -17,6 +18,7 @@ const TextInput: React.FC<TextInputProps> = ({
   required = false,
   disabled = false,
   className = "",
+  type = "text",
 }) => {
   const {
     register,
@@ -33,7 +35,7 @@ const TextInput: React.FC<TextInputProps> = ({
       </label>
       <input
         id={name}
-        type="text"
+        type={type}
         placeholder={placeholder}
         disabled={disabled}
         className={`w-full px-4 py-2 bg-white border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${

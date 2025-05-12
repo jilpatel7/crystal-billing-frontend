@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
 import PartyList from "./features/party/pages/PartyList";
 import StaffList from "./features/staff/pages/StaffList";
+import PartyFormPage from "./features/party/pages/PartyFormPage";
 
 function App() {
   const queryClient = new QueryClient();
@@ -18,7 +19,7 @@ function App() {
           <Route path="/orders" element={<OrderList />} />
           <Route path="/orders/create" element={<OrderFormPage />} />
           <Route path="/party" element={<PartyList />} />
-          <Route path="/party/create" element={<OrderFormPage />} />
+          <Route path="/party/create" element={<PartyFormPage />} />
           <Route path="/staff" element={<StaffList />} />
           <Route path="/staff/create" element={<OrderFormPage />} />
         </Routes>
