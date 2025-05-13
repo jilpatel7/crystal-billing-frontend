@@ -7,8 +7,11 @@ import { useQuery } from "@tanstack/react-query";
 import { IGetDataParams } from "../../../types";
 import { getStaff } from "../services";
 import { StaffMember } from "../types";
+import { useNavigate } from "react-router-dom";
 
 const StaffList: React.FC = () => {
+  const navigate = useNavigate();
+
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [ordersPerPage] = useState(10);
@@ -61,8 +64,6 @@ const StaffList: React.FC = () => {
     queryFn: () => getStaff(queryParams),
   });
 
-  console.log(data);
-
   const handleSort = (field: keyof StaffMember, direction: "ASC" | "DESC") => {
     setSortField(field);
     setSortDirection(direction);
@@ -106,7 +107,9 @@ const StaffList: React.FC = () => {
         <TableFilter
           searchValue={searchTerm}
           onSearchChange={setSearchTerm}
-          onCreate={() => {}}
+          onCreate={() => {
+            navigate("/staff/create");
+          }}
           createButtonText="Add Staff Member"
         />
 

@@ -17,6 +17,7 @@ import DateTimeInput from "../../../components/ui/DateTimeInput";
 import { useMutation } from "@tanstack/react-query";
 import { createOrder } from "../services";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 interface OrderFormProps {
   parties: { id: number; name: string }[];
@@ -24,6 +25,7 @@ interface OrderFormProps {
 }
 
 const OrderForm: React.FC<OrderFormProps> = ({ parties, staff }) => {
+  const navigate = useNavigate();
   const methods = useForm<OrderFormSchema>({
     resolver: zodResolver(orderFormSchema),
     defaultValues: {
@@ -61,6 +63,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ parties, staff }) => {
     if (response.response_type === "success") {
       toast.success("Order created successfully");
       reset();
+      navigate("/orders");
     } else {
       toast.error("Failed to create order");
     }

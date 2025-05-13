@@ -7,8 +7,11 @@ import { useQuery } from "@tanstack/react-query";
 import { getParty } from "../services";
 import { IGetDataParams } from "../../../types";
 import { Party } from "../types";
+import { useNavigate } from "react-router-dom";
 
 const PartyList: React.FC = () => {
+  const navigate = useNavigate();
+
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [ordersPerPage] = useState(10);
@@ -103,7 +106,9 @@ const PartyList: React.FC = () => {
         <TableFilter
           searchValue={searchTerm}
           onSearchChange={setSearchTerm}
-          onCreate={() => {}}
+          onCreate={() => {
+            navigate("/party/create");
+          }}
           createButtonText="Add Party"
         />
 

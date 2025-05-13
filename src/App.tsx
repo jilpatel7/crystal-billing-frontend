@@ -8,6 +8,7 @@ import { Toaster } from "sonner";
 import PartyList from "./features/party/pages/PartyList";
 import StaffList from "./features/staff/pages/StaffList";
 import PartyFormPage from "./features/party/pages/PartyFormPage";
+import StaffFormPage from "./features/staff/pages/StaffFormPage";
 
 function App() {
   const queryClient = new QueryClient();
@@ -21,7 +22,7 @@ function App() {
           <Route path="/party" element={<PartyList />} />
           <Route path="/party/create" element={<PartyFormPage />} />
           <Route path="/staff" element={<StaffList />} />
-          <Route path="/staff/create" element={<OrderFormPage />} />
+          <Route path="/staff/create" element={<StaffFormPage />} />
         </Routes>
       </Layout>
       <Toaster richColors position="top-right" />

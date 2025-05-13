@@ -1,0 +1,57 @@
+import React from "react";
+import { useFormContext } from "react-hook-form";
+
+interface TextAreaProps {
+  name: string;
+  label: string;
+  placeholder?: string;
+  required?: boolean;
+  disabled?: boolean;
+  className?: string;
+  rows?: number;
+}
+
+const TextArea: React.FC<TextAreaProps> = ({
+  name,
+  label,
+  placeholder,
+  required = false,
+  disabled = false,
+  className = "",
+  rows = 4,
+}) => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
+
+  const error = errors[name];
+  const errorMessage = error?.message as string;
+
+  return (
+    <div className={`space-y-1 ${className}`}>
+      <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+        {label} {required && <span className="text-red-500">*</span>}
+      </label>
+      <textarea
+        id={name}
+        placeholder={placeholder}
+        disabled={disabled}
+        rows={rows}
+        className={`w-full px-4 py-2 bg-white border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 resize-none ${
+          error
+            ? "border-red-300 focus:border-red-500 focus:ring-red-200"
+            : "border-gray-300 focus:border-indigo-500 focus:ring-indigo-200"
+        }`}
+        {...register(name)}
+      />
+      {error && (
+        <p className="text-sm text-red-600 mt-1 animate-fadeIn">
+          {errorMessage}
+        </p>
+      )}
+    </div>
+  );
+};
+
+export default TextArea;

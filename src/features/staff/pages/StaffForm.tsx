@@ -3,37 +3,33 @@ import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
 import { motion } from "framer-motion";
-import {
-  partyFormSchema,
-  PartyFormSchema,
-} from "../validation-schema/partySchema";
 import FormSection from "../../../components/ui/FormSelection";
 import TextInput from "../../../components/ui/TextInput";
-import AddressList from "../components/AddressList";
 import Button from "../../../components/ui/Button";
 import { useMutation } from "@tanstack/react-query";
-import { createParty } from "../services";
 import { toast } from "sonner";
+import {
+  staffFormSchema,
+  StaffFormSchema,
+} from "../validation-schema/staffSchema";
+import { createStaff } from "../services";
+import NumberInput from "../../../components/ui/NumberInput";
+import SelectInput from "../../../components/ui/SelectInput";
+import TextArea from "../../../components/ui/TextArea";
 import { useNavigate } from "react-router-dom";
 
-const PartyForm: React.FC = () => {
+const StaffForm: React.FC = () => {
   const navigate = useNavigate();
-  const methods = useForm<PartyFormSchema>({
-    resolver: zodResolver(partyFormSchema),
+  const methods = useForm<StaffFormSchema>({
+    resolver: zodResolver(staffFormSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      personal_phone: "",
-      office_phone: "",
-      // company_logo: "",
-      gstin_no: "",
-      party_addresses: [
-        {
-          address: "",
-          landmark: "",
-          pincode: "",
-        },
-      ],
+      first_name: "",
+      last_name: "",
+      gender: "",
+      age: 0,
+      primary_phone: "",
+      secondary_phone: "",
+      address: "",
     },
   });
 
@@ -44,19 +40,19 @@ const PartyForm: React.FC = () => {
   } = methods;
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: createParty,
+    mutationFn: createStaff,
   });
 
-  const onSubmit = async (data: PartyFormSchema) => {
+  const onSubmit = async (data: StaffFormSchema) => {
     console.log("Submitting form data:", data);
     const response = await mutateAsync(data);
     console.log(response);
     if (response.response_type === "success") {
-      toast.success("Party created successfully");
+      toast.success("Staff member added successfully");
       reset();
-      navigate("/party");
+      navigate("/staff");
     } else {
-      toast.error("Failed to create party");
+      toast.error("Failed to add the staff member");
     }
   };
 
@@ -69,62 +65,62 @@ const PartyForm: React.FC = () => {
           transition={{ duration: 0.5 }}
         >
           <FormSection
-            title="Party Information"
-            subtitle="Enter the main party details"
+            title="Staff Member Information"
+            subtitle="Enter the staff details"
             icon="user"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <TextInput
-                name="name"
-                label="Party Name"
-                placeholder="Enter party name"
+                name="first_name"
+                label="First Name"
+                placeholder="Enter first name"
                 required
               />
 
               <TextInput
-                name="email"
-                label="Email Address"
-                placeholder="Enter email address"
-                type="email"
+                name="last_name"
+                label="Last Name"
+                placeholder="Enter last name"
                 required
               />
 
               <TextInput
-                name="personal_phone"
-                label="Personal Phone"
-                placeholder="Enter 10-digit phone number"
+                name="primary_phone"
+                label="Primary Phone"
+                placeholder="Enter your primary phone number"
                 required
               />
 
               <TextInput
-                name="office_phone"
-                label="Office Phone"
-                placeholder="Enter 10-digit phone number"
+                name="secondary_phone"
+                label="Secondary Phone"
+                placeholder="Enter your secondary phone number"
                 required
               />
 
-              {/* <TextInput
-                name="company_logo"
-                label="Company Logo URL"
-                placeholder="Enter logo URL"
-                required
-              /> */}
+              <NumberInput name="age" label="Age" required min={18} max={100} />
 
-              <TextInput
-                name="gstin_no"
-                label="GST Number"
-                placeholder="Enter GST number"
+              <SelectInput
+                name="gender"
+                label="Gender"
+                placeholder="Select gender"
+                options={[
+                  { value: "male", label: "Male" },
+                  { value: "female", label: "Female" },
+                ]}
+                searchable
+                required
+              />
+            </div>
+            <div className="mt-6">
+              <TextArea
+                label="Adress"
+                name="address"
+                placeholder="Enter your address"
+                required
               />
             </div>
           </FormSection>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <AddressList />
         </motion.div>
 
         <div className="flex items-center justify-end space-x-4 pt-4">
@@ -144,7 +140,7 @@ const PartyForm: React.FC = () => {
             icon={<Save size={18} />}
             className="flex items-center"
           >
-            Save Party
+            Save Staff Member
           </Button>
         </div>
       </form>
@@ -152,4 +148,4 @@ const PartyForm: React.FC = () => {
   );
 };
 
-export default PartyForm;
+export default StaffForm;

@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-const phoneRegex = /^[0-9]{10}$/;
 const gstRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
 
 const addressSchema = z.object({
@@ -12,8 +11,8 @@ const addressSchema = z.object({
 export const partyFormSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   email: z.string().email('Invalid email address'),
-  personal_phone: z.string().regex(phoneRegex, 'Invalid phone number'),
-  office_phone: z.string().regex(phoneRegex, 'Invalid phone number'),
+  personal_phone: z.string().min(1, 'Phone number is required'),
+  office_phone: z.string().min(1, 'Office phone number is required'),
   // company_logo: z.string().url('Invalid logo URL'),
   gstin_no: z.string()
   .regex(gstRegex, 'Invalid GST number')
