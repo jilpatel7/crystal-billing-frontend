@@ -44,7 +44,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
         )}
       </div>
 
-      <div className="flex-1">
+      <div className="flex-1 overflow-y-scroll hide-scrollbar">
         <nav className="py-4">
           <div className="px-2 space-y-1">
             <NavItem

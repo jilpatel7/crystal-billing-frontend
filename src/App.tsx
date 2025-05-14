@@ -21,8 +21,10 @@ function App() {
           <Route path="/orders/create" element={<OrderFormPage />} />
           <Route path="/party" element={<PartyList />} />
           <Route path="/party/create" element={<PartyFormPage />} />
+          <Route path="/party/edit/:id" element={<PartyFormPage />} />
           <Route path="/staff" element={<StaffList />} />
           <Route path="/staff/create" element={<StaffFormPage />} />
+          <Route path="/staff/edit/:id" element={<StaffFormPage />} />
         </Routes>
       </Layout>
       <Toaster richColors position="top-right" />

@@ -3,6 +3,7 @@ import { z } from "zod";
 const phoneRegex = /^[0-9]{10}$/;
 
 export const staffFormSchema = z.object({
+  id: z.number().optional().nullable(),
   first_name: z.string().min(1, "First name is required"),
   last_name: z.string().min(1, "Last name is required"),
   gender: z.string().min(1, "Gender is required"),

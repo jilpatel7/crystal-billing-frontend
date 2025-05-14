@@ -1,4 +1,4 @@
-import React from "react";
+import { Dispatch, SetStateAction } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { PlusCircle, Trash2 } from "lucide-react";
 import { PartyFormSchema } from "../validation-schema/partySchema";
@@ -6,7 +6,11 @@ import FormSection from "../../../components/ui/FormSelection";
 import Button from "../../../components/ui/Button";
 import TextInput from "../../../components/ui/TextInput";
 
-const AddressList: React.FC = () => {
+interface AddressListProps {
+  setRemoveAddressIds: Dispatch<SetStateAction<number[]>>;
+}
+
+const AddressList = ({ setRemoveAddressIds }: AddressListProps) => {
   const {
     control,
     formState: { errors },
@@ -15,10 +19,12 @@ const AddressList: React.FC = () => {
   const { fields, append, remove } = useFieldArray({
     control,
     name: "party_addresses",
+    keyName: "_internalId",
   });
 
   const handleAddAddress = () => {
     append({
+      id: null,
       address: "",
       landmark: "",
       pincode: "",
@@ -52,7 +58,16 @@ const AddressList: React.FC = () => {
                   <Button
                     type="button"
                     variant="primary"
-                    onClick={() => remove(index)}
+                    onClick={() => {
+                      console.log(field);
+                      if (field.id) {
+                        setRemoveAddressIds((prev) => [
+                          ...prev,
+                          field.id as number,
+                        ]);
+                      }
+                      remove(index);
+                    }}
                     className="text-red-500 hover:text-red-700"
                   >
                     <Trash2 size={18} />

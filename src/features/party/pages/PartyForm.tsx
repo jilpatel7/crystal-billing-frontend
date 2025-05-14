@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
@@ -12,11 +12,15 @@ import TextInput from "../../../components/ui/TextInput";
 import AddressList from "../components/AddressList";
 import Button from "../../../components/ui/Button";
 import { useMutation } from "@tanstack/react-query";
-import { createParty } from "../services";
+import { createParty, getSingleParty, updateParty } from "../services";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
-const PartyForm: React.FC = () => {
+interface PartyFormProps {
+  id?: string;
+}
+
+const PartyForm: React.FC<PartyFormProps> = ({ id }) => {
   const navigate = useNavigate();
   const methods = useForm<PartyFormSchema>({
     resolver: zodResolver(partyFormSchema),
@@ -29,6 +33,7 @@ const PartyForm: React.FC = () => {
       gstin_no: "",
       party_addresses: [
         {
+          id: null,
           address: "",
           landmark: "",
           pincode: "",
@@ -36,6 +41,7 @@ const PartyForm: React.FC = () => {
       ],
     },
   });
+  const [removeAddressIds, setRemoveAddressIds] = useState<number[]>([]);
 
   const {
     handleSubmit,
@@ -44,21 +50,35 @@ const PartyForm: React.FC = () => {
   } = methods;
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: createParty,
+    mutationFn: id ? updateParty : createParty,
   });
 
   const onSubmit = async (data: PartyFormSchema) => {
-    console.log("Submitting form data:", data);
-    const response = await mutateAsync(data);
-    console.log(response);
-    if (response.response_type === "success") {
-      toast.success("Party created successfully");
-      reset();
-      navigate("/party");
-    } else {
-      toast.error("Failed to create party");
+    try {
+      const response = await mutateAsync(
+        id
+          ? { ...data, id: Number(id), removed_address_ids: removeAddressIds }
+          : data
+      );
+      if (response.response_type === "success") {
+        toast.success(`Party ${id ? "updated" : "added"} successfully`);
+        navigate("/party");
+      } else {
+        toast.error("Something went wrong");
+      }
+    } catch (error) {
+      console.error("Failed to submit form", error);
+      toast.error("Failed to submit the form");
     }
   };
+
+  useEffect(() => {
+    if (id) {
+      getSingleParty(Number(id)).then((partyData) => {
+        reset(partyData.data);
+      });
+    }
+  }, [id, reset]);
 
   return (
     <FormProvider {...methods}>
@@ -124,7 +144,7 @@ const PartyForm: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <AddressList />
+          <AddressList setRemoveAddressIds={setRemoveAddressIds} />
         </motion.div>
 
         <div className="flex items-center justify-end space-x-4 pt-4">

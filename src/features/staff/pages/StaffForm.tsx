@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
@@ -12,13 +12,17 @@ import {
   staffFormSchema,
   StaffFormSchema,
 } from "../validation-schema/staffSchema";
-import { createStaff } from "../services";
+import { createStaff, getSingleStaff, updateStaff } from "../services";
 import NumberInput from "../../../components/ui/NumberInput";
 import SelectInput from "../../../components/ui/SelectInput";
 import TextArea from "../../../components/ui/TextArea";
 import { useNavigate } from "react-router-dom";
 
-const StaffForm: React.FC = () => {
+interface StaffFormProps {
+  id?: string;
+}
+
+const StaffForm: React.FC<StaffFormProps> = ({ id }) => {
   const navigate = useNavigate();
   const methods = useForm<StaffFormSchema>({
     resolver: zodResolver(staffFormSchema),
@@ -40,21 +44,34 @@ const StaffForm: React.FC = () => {
   } = methods;
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: createStaff,
+    mutationFn: id ? updateStaff : createStaff,
   });
 
   const onSubmit = async (data: StaffFormSchema) => {
-    console.log("Submitting form data:", data);
-    const response = await mutateAsync(data);
-    console.log(response);
-    if (response.response_type === "success") {
-      toast.success("Staff member added successfully");
-      reset();
-      navigate("/staff");
-    } else {
-      toast.error("Failed to add the staff member");
+    try {
+      const response = await mutateAsync(
+        id ? { ...data, id: Number(id) } : data
+      );
+      if (response.response_type === "success") {
+        toast.success(`Staff member ${id ? "updated" : "added"} successfully`);
+        navigate("/staff");
+      } else {
+        toast.error("Something went wrong");
+      }
+    } catch (error) {
+      console.error("Failed to submit form", error);
+      toast.error("Failed to submit the form");
     }
   };
+
+  useEffect(() => {
+    console.log(id);
+    if (id) {
+      getSingleStaff(Number(id)).then((staffData) => {
+        reset(staffData.data);
+      });
+    }
+  }, [id, reset]);
 
   return (
     <FormProvider {...methods}>

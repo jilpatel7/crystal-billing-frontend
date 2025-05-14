@@ -16,3 +16,18 @@ export const createStaff = async (data: StaffFormSchema) => {
   const { data: staff } = await axiosInstance.post('/company-staff/create', data);
   return staff;
 };
+
+export const deleteStaff = async (id: number) => {
+  const { data } = await axiosInstance.delete(`/company-staff/delete`, { data: { id } });
+  return data;
+};
+
+export const updateStaff = async (data: StaffFormSchema) => {
+  const { data: staff } = await axiosInstance.put('/company-staff/update', data);
+  return staff;
+};
+
+export const getSingleStaff = async (id: number) => {
+  const response = await axiosInstance.get(`/company-staff/get`, { params: { id } });
+  return response.data;
+};
