@@ -9,6 +9,7 @@ import PartyList from "./features/party/pages/PartyList";
 import StaffList from "./features/staff/pages/StaffList";
 import PartyFormPage from "./features/party/pages/PartyFormPage";
 import StaffFormPage from "./features/staff/pages/StaffFormPage";
+import LoginPage from "./features/auth/pages/LoginPage";
 
 function App() {
   const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ function App() {
           <Route path="/staff" element={<StaffList />} />
           <Route path="/staff/create" element={<StaffFormPage />} />
           <Route path="/staff/edit/:id" element={<StaffFormPage />} />
+          <Route path="/auth/login" element={<LoginPage />} />
         </Routes>
       </Layout>
       <Toaster richColors position="top-right" />
