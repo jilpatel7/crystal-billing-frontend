@@ -1,12 +1,9 @@
 import React, { useState } from "react";
+import { Outlet } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
 
-interface LayoutProps {
-  children: React.ReactNode;
-}
-
-export const Layout: React.FC<LayoutProps> = ({ children }) => {
+export const Layout: React.FC = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const toggleSidebar = () => {
@@ -15,6 +12,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <div className="flex h-screen bg-gray-50">
+      {/* Overlay for mobile */}
       <div
         className={`fixed inset-0 bg-gray-800/50 lg:hidden transition-opacity duration-300 ${
           !sidebarCollapsed
@@ -23,6 +21,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         }`}
         onClick={toggleSidebar}
       />
+
+      {/* Sidebar */}
       <div
         className={`fixed lg:relative z-40 ${
           sidebarCollapsed
@@ -32,9 +32,13 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       >
         <Sidebar collapsed={sidebarCollapsed} />
       </div>
+
+      {/* Main content */}
       <div className="flex flex-col flex-1 overflow-hidden">
         <Header onMenuClick={toggleSidebar} />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
+        <main className="flex-1 overflow-y-auto p-4 md:p-6">
+          <Outlet />
+        </main>
       </div>
     </div>
   );

@@ -85,13 +85,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
               <NavItem
                 icon={<ListOrderedIcon size={20} />}
                 title="View Orders"
-                to="/orders"
+                to="/order"
                 collapsed={collapsed}
               />
               <NavItem
                 icon={<BadgePlus size={20} />}
                 title="Create Order"
-                to="/orders/create"
+                to="/order/create"
                 collapsed={collapsed}
               />
             </div>
