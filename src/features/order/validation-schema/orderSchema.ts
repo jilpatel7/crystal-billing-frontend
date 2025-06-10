@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { Status } from '../types'; // enum Status { PENDING = 'PENDING', SUCCESS = 'SUCCESS', ... }
 
 // Lot schema
-const orderDetailSchema = z.object({
+export const orderDetailSchema = z.object({
   no_of_diamonds: z.number({
     required_error: 'Number of diamonds is required',
     invalid_type_error: 'Number of diamonds must be a number',
@@ -22,6 +22,10 @@ const orderDetailSchema = z.object({
     required_error: 'Lot status is required',
     invalid_type_error: 'Invalid lot status',
   }),
+
+  order_id: z.number({
+    invalid_type_error: 'Order ID must be a number',
+  }).optional().nullable(),
 });
 
 // Order schema
@@ -88,3 +92,4 @@ export const orderFormSchema = z.object({
 );
 
 export type OrderFormSchema = z.infer<typeof orderFormSchema>;
+export type LotFormSchema = z.infer<typeof orderDetailSchema>;

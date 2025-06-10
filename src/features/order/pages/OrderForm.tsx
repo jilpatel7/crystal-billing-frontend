@@ -63,7 +63,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ parties, staff }) => {
     if (response.response_type === "success") {
       toast.success("Order created successfully");
       reset();
-      navigate("/orders");
+      navigate("/order");
     } else {
       toast.error("Failed to create order");
     }
