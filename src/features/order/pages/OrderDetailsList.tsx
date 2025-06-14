@@ -1,4 +1,4 @@
-import React from "react";
+import { Dispatch, SetStateAction } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { PlusCircle, Trash2 } from "lucide-react";
 import { Status } from "../types";
@@ -8,7 +8,11 @@ import NumberInput from "../../../components/ui/NumberInput";
 import SelectInput from "../../../components/ui/SelectInput";
 import { OrderFormSchema } from "../validation-schema/orderSchema";
 
-const OrderDetailsList: React.FC = () => {
+interface OrderDetailsListProps {
+  setRemoveLotIds: Dispatch<SetStateAction<number[]>>;
+}
+
+const OrderDetailsList = ({ setRemoveLotIds }: OrderDetailsListProps) => {
   const {
     control,
     formState: { errors },
@@ -17,6 +21,7 @@ const OrderDetailsList: React.FC = () => {
   const { fields, append, remove } = useFieldArray({
     control,
     name: "order_details",
+    keyName: "_internalId",
   });
 
   const handleAddLot = () => {
@@ -55,7 +60,15 @@ const OrderDetailsList: React.FC = () => {
                   <Button
                     type="button"
                     variant="primary"
-                    onClick={() => remove(index)}
+                    onClick={() => {
+                      if (field.id) {
+                        setRemoveLotIds((prev) => [
+                          ...prev,
+                          field.id as number,
+                        ]);
+                      }
+                      remove(index);
+                    }}
                     className="text-red-500 hover:text-red-700"
                   >
                     <Trash2 size={18} />
@@ -88,7 +101,7 @@ const OrderDetailsList: React.FC = () => {
 
                 <SelectInput
                   name={`order_details.${index}.status`}
-                  label="Order Status"
+                  label="Lot Status"
                   placeholder="Select status"
                   options={Object.entries(Status).map(([key, value]) => ({
                     value,
@@ -100,6 +113,7 @@ const OrderDetailsList: React.FC = () => {
                       .join(" "),
                   }))}
                   required
+                  isClearable={false}
                 />
               </div>
 

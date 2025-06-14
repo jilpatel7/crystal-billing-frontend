@@ -13,6 +13,7 @@ interface DateTimeInputProps {
   required?: boolean;
   disabled?: boolean;
   className?: string;
+  isClearable?: boolean;
 }
 
 const DateTimeInput: React.FC<DateTimeInputProps> = ({
@@ -21,6 +22,7 @@ const DateTimeInput: React.FC<DateTimeInputProps> = ({
   required = false,
   disabled = false,
   className = "",
+  isClearable = true,
 }) => {
   const {
     setValue,
@@ -111,7 +113,7 @@ const DateTimeInput: React.FC<DateTimeInputProps> = ({
           <span className={!value ? "text-gray-400" : "text-gray-900"}>
             {formattedDateTime || "Select date and time"}
           </span>
-          {value && (
+          {value && isClearable && (
             <button
               type="button"
               onClick={handleClear}

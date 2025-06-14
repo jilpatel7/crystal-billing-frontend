@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
-import { DateRange, GetOrdersParams, Status } from "../types";
+import { DateRange, GetOrdersParams, Lot, Status } from "../types";
 import FilterBar from "../components/OrderFilter/FilterBar";
 import OrderTable from "../components/OrderTable";
 import Pagination from "../../../components/ui/Pagination";
-import { useQuery } from "@tanstack/react-query";
-import { getOrders } from "../services";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { deleteLot, deleteOrder, getOrders } from "../services";
 import { useNavigate } from "react-router-dom";
 import CreateLotDialog from "../../../components/ui/CreateLotDialog";
+import DeleteConfirmationDialog from "../../../components/ui/DeleteConfirmationDialog";
+import { toast } from "sonner";
 
 function OrderList() {
   const navigate = useNavigate();
@@ -16,6 +18,30 @@ function OrderList() {
   }>({
     isOpen: false,
     order: null,
+  });
+
+  const [showEditLotDialog, setShowEditLotDialog] = useState<{
+    isOpen: boolean;
+    lotData: Lot | null;
+  }>({
+    isOpen: false,
+    lotData: null,
+  });
+
+  const [showDeleteLotDialog, setShowDeleteLotDialog] = useState<{
+    isOpen: boolean;
+    lotId: number | null;
+  }>({
+    isOpen: false,
+    lotId: null,
+  });
+
+  const [showDeleteOrderDialog, setShowDeleteOrderDialog] = useState<{
+    isOpen: boolean;
+    orderId: number | null;
+  }>({
+    isOpen: false,
+    orderId: null,
   });
 
   // Pagination state
@@ -44,6 +70,47 @@ function OrderList() {
     queryKey: ["orders", queryParams],
     queryFn: () => getOrders(queryParams),
   });
+
+  const queryClient = useQueryClient();
+  const { mutateAsync: deleteLotMutation, isPending: isLotDeletePending } =
+    useMutation({
+      mutationFn: deleteLot,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["orders"] });
+      },
+    });
+
+  const { mutateAsync: deleteOrderMutation, isPending: isOrderDeletePending } =
+    useMutation({
+      mutationFn: deleteOrder,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["orders"] });
+      },
+    });
+
+  const onDeleteLot = async () => {
+    if (!showDeleteLotDialog.lotId) return;
+
+    try {
+      await deleteLotMutation(showDeleteLotDialog.lotId);
+      toast.success("Lot deleted successfully");
+    } catch (error) {
+      console.error("Failed to delete", error);
+      toast.error("Failed to delete lot");
+    }
+  };
+
+  const onDeleteOrder = async () => {
+    if (!showDeleteOrderDialog.orderId) return;
+
+    try {
+      await deleteOrderMutation(showDeleteOrderDialog.orderId);
+      toast.success("Order deleted successfully");
+    } catch (error) {
+      console.error("Failed to delete", error);
+      toast.error("Failed to delete order");
+    }
+  };
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -90,10 +157,21 @@ function OrderList() {
 
         <OrderTable
           orders={data?.data?.data ?? []}
-          onEditOrder={() => {}}
-          onDeleteOrder={() => {}}
-          onEditLot={() => {}}
-          onDeleteLot={() => {}}
+          onEditOrder={(order) => {
+            navigate("/order/edit/" + order.id);
+          }}
+          onDeleteOrder={(orderId) => {
+            setShowDeleteOrderDialog({ isOpen: true, orderId });
+          }}
+          onEditLot={(lot) => {
+            setShowEditLotDialog({
+              isOpen: true,
+              lotData: lot,
+            });
+          }}
+          onDeleteLot={(lotId) => {
+            setShowDeleteLotDialog({ isOpen: true, lotId });
+          }}
           onCreateLot={(orderId) => {
             setShowCreateLotDialog({ isOpen: true, order: orderId });
           }}
@@ -111,6 +189,34 @@ function OrderList() {
           onClose={() => setShowCreateLotDialog({ isOpen: false, order: null })}
           orderId={showCreateLotDialog.order as number}
           refetchOrders={refetch}
+        />
+
+        <CreateLotDialog
+          isOpen={showEditLotDialog.isOpen}
+          onClose={() => setShowEditLotDialog({ isOpen: false, lotData: null })}
+          orderId={showEditLotDialog.lotData?.order_id as number}
+          refetchOrders={refetch}
+          lotData={showEditLotDialog.lotData}
+        />
+
+        <DeleteConfirmationDialog
+          isOpen={showDeleteLotDialog.isOpen}
+          onClose={() => setShowDeleteLotDialog({ isOpen: false, lotId: null })}
+          onConfirm={() => {
+            onDeleteLot();
+          }}
+          isLoading={isLotDeletePending}
+        />
+
+        <DeleteConfirmationDialog
+          isOpen={showDeleteOrderDialog.isOpen}
+          onClose={() =>
+            setShowDeleteOrderDialog({ isOpen: false, orderId: null })
+          }
+          onConfirm={() => {
+            onDeleteOrder();
+          }}
+          isLoading={isOrderDeletePending}
         />
       </main>
     </div>

@@ -17,6 +17,7 @@ interface SelectInputProps {
   disabled?: boolean;
   searchable?: boolean;
   className?: string;
+  isClearable?: boolean;
 }
 
 const SelectInput: React.FC<SelectInputProps> = ({
@@ -28,6 +29,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
   disabled = false,
   searchable = false,
   className = "",
+  isClearable = true,
 }) => {
   const {
     register,
@@ -75,7 +77,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
 
   const handleClear = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setValue(name, "", { shouldValidate: true });
+    setValue(name, null, { shouldValidate: true });
   };
 
   const error = errors[name];
@@ -102,7 +104,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
             {selectedOption ? selectedOption.label : placeholder}
           </span>
           <div className="flex items-center">
-            {selectedOption && (
+            {selectedOption && isClearable && (
               <button
                 type="button"
                 onClick={handleClear}

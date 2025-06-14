@@ -3,8 +3,10 @@ import OrderForm from "./OrderForm";
 import { useQuery } from "@tanstack/react-query";
 import { getAllPartyIdsAndNames } from "../../party/services";
 import { getAllStaffIdsAndNames } from "../../staff/services";
+import { useParams } from "react-router-dom";
 
 const OrderFormPage: React.FC = () => {
+  const { id } = useParams();
   const {
     data: allPartyIdsAndNames,
     // isLoading,
@@ -31,11 +33,13 @@ const OrderFormPage: React.FC = () => {
         <header className="mb-8">
           <div className="flex items-center justify-between mb-2">
             <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-transparent bg-clip-text">
-              Create New Order
+              {id ? "Edit Order" : "Create New Order"}
             </h1>
           </div>
           <p className="text-gray-600">
-            Enter order details and add diamond lots below
+            {id
+              ? "Update order details and add diamond lots below"
+              : "Enter order details and add diamond lots below"}
           </p>
         </header>
 
@@ -55,6 +59,7 @@ const OrderFormPage: React.FC = () => {
               }
             ) ?? []
           }
+          id={id}
         />
       </div>
     </div>

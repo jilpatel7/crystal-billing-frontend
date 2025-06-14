@@ -12,13 +12,28 @@ export const createOrder = async (data: OrderFormSchema) => {
   return order;
 };
 
+export const updateOrder = async (data: OrderFormSchema) => {
+  const { data: order } = await axiosInstance.put('/order/update', data);
+  return order;
+};
+
 export const deleteOrder = async (id: number) => {
   const { data } = await axiosInstance.delete('/order/delete',  { data: { id } });
   return data;
 };
 
+export const getSingleOrder = async (id: number) => {
+  const response = await axiosInstance.get(`/order/get`, { params: { id } });
+  return response.data;
+}
+
 export const createLot = async (data: LotFormSchema) => {
   const { data: lot } = await axiosInstance.post('/order/lot/create', data);
+  return lot;
+};
+
+export const updateLot = async (data: LotFormSchema) => {
+  const { data: lot } = await axiosInstance.put('/order/lot/update', data);
   return lot;
 };
 

@@ -22,6 +22,7 @@ const routes = createBrowserRouter([
       { path: "", element: <Dashboard /> },
       { path: "order", element: <OrderList /> },
       { path: "order/create", element: <OrderFormPage /> },
+      { path: "order/edit/:id", element: <OrderFormPage /> },
 
       { path: "party", element: <PartyList /> },
       { path: "party/create", element: <PartyFormPage /> },

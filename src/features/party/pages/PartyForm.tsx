@@ -151,7 +151,10 @@ const PartyForm: React.FC<PartyFormProps> = ({ id }) => {
           <Button
             type="button"
             variant="outline"
-            onClick={() => reset()}
+            onClick={() => {
+              reset();
+              setRemoveAddressIds([]);
+            }}
             disabled={isSubmitting || isPending}
           >
             Cancel

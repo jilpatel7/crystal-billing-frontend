@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
@@ -15,16 +15,17 @@ import SelectInput from "../../../components/ui/SelectInput";
 import TextInput from "../../../components/ui/TextInput";
 import DateTimeInput from "../../../components/ui/DateTimeInput";
 import { useMutation } from "@tanstack/react-query";
-import { createOrder } from "../services";
+import { createOrder, getSingleOrder, updateOrder } from "../services";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
 interface OrderFormProps {
   parties: { id: number; name: string }[];
   staff: { id: number; name: string }[];
+  id?: string;
 }
 
-const OrderForm: React.FC<OrderFormProps> = ({ parties, staff }) => {
+const OrderForm: React.FC<OrderFormProps> = ({ parties, staff, id }) => {
   const navigate = useNavigate();
   const methods = useForm<OrderFormSchema>({
     resolver: zodResolver(orderFormSchema),
@@ -47,8 +48,10 @@ const OrderForm: React.FC<OrderFormProps> = ({ parties, staff }) => {
   });
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: createOrder,
+    mutationFn: id ? updateOrder : createOrder,
   });
+
+  const [removeLotIds, setRemoveLotIds] = useState<number[]>([]);
 
   const {
     handleSubmit,
@@ -57,17 +60,33 @@ const OrderForm: React.FC<OrderFormProps> = ({ parties, staff }) => {
   } = methods;
 
   const onSubmit = async (data: OrderFormSchema) => {
-    console.log("Submitting form data:", data);
-    const response = await mutateAsync(data);
-    console.log(response);
+    const response = await mutateAsync(
+      id ? { ...data, id: Number(id), removed_lot_ids: removeLotIds } : data
+    );
     if (response.response_type === "success") {
-      toast.success("Order created successfully");
+      toast.success(`${id ? "Order updated" : "Order created"} successfully`);
       reset();
       navigate("/order");
     } else {
-      toast.error("Failed to create order");
+      toast.error(`${id ? "Failed to update" : "Failed to create"} order`);
     }
   };
+
+  useEffect(() => {
+    if (id) {
+      getSingleOrder(Number(id)).then((orderData) => {
+        reset({
+          ...orderData.data,
+          received_at: orderData.data.received_at
+            ? new Date(orderData.data.received_at)
+            : new Date(),
+          delivered_at: orderData.data.delivered_at
+            ? new Date(orderData.data.delivered_at)
+            : null,
+        });
+      });
+    }
+  }, [id, reset]);
 
   return (
     <FormProvider {...methods}>
@@ -93,6 +112,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ parties, staff }) => {
                 }))}
                 searchable
                 required
+                isClearable={false}
               />
 
               <TextInput
@@ -114,9 +134,15 @@ const OrderForm: React.FC<OrderFormProps> = ({ parties, staff }) => {
                     .join(" "),
                 }))}
                 required
+                isClearable={false}
               />
 
-              <DateTimeInput name="received_at" label="Received At" required />
+              <DateTimeInput
+                name="received_at"
+                label="Received At"
+                required
+                isClearable={false}
+              />
 
               <DateTimeInput name="delivered_at" label="Delivered At" />
 
@@ -139,14 +165,17 @@ const OrderForm: React.FC<OrderFormProps> = ({ parties, staff }) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <OrderDetailsList />
+          <OrderDetailsList setRemoveLotIds={setRemoveLotIds} />
         </motion.div>
 
         <div className="flex items-center justify-end space-x-4 pt-4">
           <Button
             type="button"
             variant="outline"
-            onClick={() => reset()}
+            onClick={() => {
+              reset();
+              setRemoveLotIds([]);
+            }}
             disabled={isSubmitting || isPending}
           >
             Cancel
@@ -159,7 +188,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ parties, staff }) => {
             icon={<Save size={18} />}
             className="flex items-center"
           >
-            Save Order
+            {id ? "Update Order" : "Create Order"}
           </Button>
         </div>
       </form>
