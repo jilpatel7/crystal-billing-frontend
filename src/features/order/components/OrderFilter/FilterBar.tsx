@@ -6,6 +6,8 @@ import { Plus, X } from "lucide-react";
 import Button from "../../../../components/ui/Button";
 import DateRangeFilter from "./DateRangeFilter";
 import { DateRange, Status } from "../../types";
+import { getAllPartyIdsAndNames } from "../../../party/services";
+import { useQuery } from "@tanstack/react-query";
 
 interface FilterBarProps {
   searchValue: string;
@@ -32,6 +34,19 @@ const FilterBar: React.FC<FilterBarProps> = ({
     onStatusChange(null);
   };
 
+  const { data: parties, isLoading: isLoadingParties } = useQuery({
+    queryKey: ["parties"],
+    queryFn: () => getAllPartyIdsAndNames(),
+  });
+
+  console.log(parties);
+
+  const handleSuggestionSelect = (party: { id: string; name: string }) => {
+    // You can add additional logic here when a suggestion is selected
+    // For example, you might want to filter orders by the selected party
+    console.log("Selected party:", party);
+  };
+
   const hasActiveFilters =
     searchValue || dateRange.from || dateRange.to || selectedStatus;
 
@@ -39,7 +54,14 @@ const FilterBar: React.FC<FilterBarProps> = ({
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
       <div className="flex flex-col lg:flex-row gap-4 justify-between mb-4">
         <div className="flex-1 max-w-md">
-          <SearchBar value={searchValue} onChange={onSearchChange} />
+          <SearchBar
+            value={searchValue}
+            onChange={onSearchChange}
+            suggestions={parties?.data || []}
+            isLoadingSuggestions={isLoadingParties}
+            onSuggestionSelect={handleSuggestionSelect}
+            placeholder="Search parties by name..."
+          />
         </div>
         <div className="flex gap-2">
           {hasActiveFilters && (

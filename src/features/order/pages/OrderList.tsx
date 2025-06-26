@@ -4,11 +4,12 @@ import FilterBar from "../components/OrderFilter/FilterBar";
 import OrderTable from "../components/OrderTable";
 import Pagination from "../../../components/ui/Pagination";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteLot, deleteOrder, getOrders } from "../services";
+import { deleteLot, deleteOrder, generateBill, getOrders } from "../services";
 import { useNavigate } from "react-router-dom";
 import CreateLotDialog from "../../../components/ui/CreateLotDialog";
 import DeleteConfirmationDialog from "../../../components/ui/DeleteConfirmationDialog";
 import { toast } from "sonner";
+import { Download, FileText, Loader2 } from "lucide-react";
 
 function OrderList() {
   const navigate = useNavigate();
@@ -71,6 +72,11 @@ function OrderList() {
     queryFn: () => getOrders(queryParams),
   });
 
+  const { mutateAsync: generateBillMutation, isPending: isBillGenerating } =
+    useMutation({
+      mutationFn: generateBill,
+    });
+
   const queryClient = useQueryClient();
   const { mutateAsync: deleteLotMutation, isPending: isLotDeletePending } =
     useMutation({
@@ -112,6 +118,31 @@ function OrderList() {
     }
   };
 
+  const handleGenerateBill = async () => {
+    try {
+      const blob = await generateBillMutation(queryParams);
+
+      console.log(blob);
+
+      // Add safety check
+      if (!(blob instanceof Blob)) {
+        throw new Error("Expected Blob but got: " + typeof blob);
+      }
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "bill.pdf";
+      a.click();
+      URL.revokeObjectURL(url);
+
+      toast.success("Bill downloaded successfully");
+    } catch (error) {
+      console.error("Failed to generate bill", error);
+      toast.error("Failed to generate bill");
+    }
+  };
+
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedTerm(searchTerm);
@@ -131,7 +162,7 @@ function OrderList() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <main className="flex-1 container mx-auto px-4 py-6 space-y-6">
-        <header className="mb-8">
+        {/* <header className="mb-8">
           <div className="flex items-center justify-between mb-2">
             <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-transparent bg-clip-text">
               Orders Management
@@ -141,6 +172,53 @@ function OrderList() {
             View, track, and manage all customer orders efficiently from one
             place.
           </p>
+        </header> */}
+        <header className="mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
+            <div>
+              <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-transparent bg-clip-text">
+                Orders Management
+              </h1>
+              <p className="text-gray-600 mt-2">
+                View, track, and manage all customer orders efficiently from one
+                place.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button
+                onClick={handleGenerateBill}
+                disabled={isBillGenerating}
+                className="group relative px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 ease-in-out disabled:transform-none disabled:cursor-not-allowed focus:outline-none focus:ring-4 focus:ring-emerald-200 focus:ring-opacity-50"
+              >
+                <div className="flex items-center gap-3">
+                  {isBillGenerating ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <span>Generating...</span>
+                    </>
+                  ) : (
+                    <>
+                      <FileText className="w-5 h-5" />
+                      <span>Generate Bill</span>
+                      <Download className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" />
+                    </>
+                  )}
+                </div>
+
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-xl opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+              </button>
+
+              {data?.data?.data && data.data.data.length > 0 && (
+                <div className="hidden lg:flex flex-col justify-center text-right text-sm text-gray-600">
+                  <span className="font-medium">
+                    {data.data.data.length} orders
+                  </span>
+                  <span className="text-xs opacity-75">in current view</span>
+                </div>
+              )}
+            </div>
+          </div>
         </header>
 
         <FilterBar

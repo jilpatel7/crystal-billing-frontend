@@ -80,7 +80,7 @@ function CreateLotDialog({
         id: lotData.id,
       });
     }
-  }, [lotData]);
+  }, [lotData, methods]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
