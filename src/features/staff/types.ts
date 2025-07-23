@@ -10,3 +10,27 @@ export interface StaffMember {
   created_at: string;
   updated_at: string;
 }
+
+export enum AttendanceStatus {
+  PRESENT = 'PRESENT',
+  ABSENT = 'ABSENT',
+  HALF_DAY = 'HALF_DAY'
+}
+
+export interface AttendanceRecord {
+  id: number;
+  staff_id: number;
+  date: string;
+  status: AttendanceStatus;
+  reason?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface LeaveRequest {
+  staff_id: number;
+  start_date: string;
+  end_date: string;
+  status: AttendanceStatus;
+  reason: string;
+}
