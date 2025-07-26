@@ -203,8 +203,6 @@ const StaffList: React.FC = () => {
     enabled: !!selectedStaff && activeTab === "attendance",
   });
 
-  console.log("summaryData", summaryData);
-
   const handleSort = (field: keyof StaffMember, direction: "ASC" | "DESC") => {
     setSortField(field);
     setSortDirection(direction);
@@ -256,7 +254,6 @@ const StaffList: React.FC = () => {
 
   const handleDateClick = (date: Date) => {
     if (!selectedStaff) return;
-
     setSelectedDate(date);
     setShowAttendanceDialog({
       isOpen: true,
@@ -322,7 +319,6 @@ const StaffList: React.FC = () => {
                 onMonthChange={setCurrentMonth}
               />
             </div>
-
             <div>
               {summaryData?.data && (
                 <AttendanceSummaryCard

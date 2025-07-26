@@ -29,16 +29,6 @@ const AttendanceSummaryCard: React.FC<AttendanceSummaryProps> = ({
   halfDays,
   attendancePercentage,
 }) => {
-  console.log(
-    staffName,
-    month,
-    year,
-    totalDays,
-    presentDays,
-    absentDays,
-    halfDays,
-    attendancePercentage
-  );
   const getPercentageColor = (percentage: number) => {
     if (percentage >= 90) return "text-green-600";
     if (percentage >= 75) return "text-yellow-600";
