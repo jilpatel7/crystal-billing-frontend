@@ -20,7 +20,7 @@ export enum AttendanceStatus {
 export interface AttendanceRecord {
   id: number;
   staff_id: number;
-  date: string;
+  attendance_date: string;
   status: AttendanceStatus;
   reason?: string;
   created_at: string;

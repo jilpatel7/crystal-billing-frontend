@@ -61,7 +61,6 @@ export const getAttendance = async (params: {
   staff_id?: number;
   month?: string;
 }) => {
-  console.log("params", params);
   const { data } = await axiosInstance.get("/company-staff/attendance/get", {
     params,
   });
